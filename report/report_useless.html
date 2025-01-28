@@ -1,0 +1,309 @@
+<meta charset="utf-8" emacsmode="-*- markdown -*-">
+<style class="fallback">body {visibility: hidden}</style>
+<link href="../resources/common.css" rel="stylesheet" type="text/css" />
+
+**Aurora Rendering: Volumetric Photon Mapping and Artistic Scene Design**
+
+
+# Introduction
+
+In this project, we developed an advanced rendering system capable of producing highly realistic animations that feature complex visual phenomena such as the aurora borealis. By implementing volumetric photon mapping, we achieved authentic light scattering and emission effects, enhancing the overall visual realism of our scenes. One of the primary challenges was optimizing the rendering algorithms to efficiently handle the computational demands of volumetric effects and photon mapping without compromising image quality. Our innovative approach includes the integration of an environment map emitter with importance sampling, which significantly improves light distribution in environments with limited light sources. Additionally, we employed parallel rendering techniques to accelerate the rendering process, enabling the production of high-quality animations within a feasible timeframe.
+
+Skills：(fill in this)
+
+# Proposed Features
+
+Features we implemented in our project:
+
+* Depth of field.
+
+* Normal mapping.
+
+* Different light sources.
+
+* Environment map emitter with importance sampling.
+
+* Participating media path tracer.
+
+* Photon mapping, final gathering and progressive photon mapping.
+
+* Volumetric photon mapping.
+
+* Parallel rendering.
+
+
+
+
+## Basic Features
+
+We implements some basic features before.
+But after multi-times version iteration, we want to make sure it can still work properly.
+
+### Depth of Field
+
+<div class="twentytwenty-container">
+    <img src="images/no_depth_of_field.jpg" alt="Pinhole Camera">
+    <img src="images/depth_of_field.jpg" alt="Aperture = 0.5">
+</div>
+
+### Normal Mapping
+
+<div class="twentytwenty-container">
+    <img src="images/normal_map_mats.jpg" alt="Mats">
+    <img src="images/normal_map_pm.jpg" alt="PM">
+    <img src="images/normal_map_pmfg.jpg" alt="PMFG">
+</div>
+
+### Different light sources
+
+* the Beam Light: Control the cos range as a diffuse light, which is hard for Mats tracer.
+
+![Light Beam](images/light_beam.jpg)
+
+* the Project Light: Return color only in the vaild range of cosine and the uv has non-zero value. This is pretty useful to project colorful aurora on the sky, which we will discuss later.
+
+
+
+
+## Advanced Features
+
+### Environment Map Emitter with Importance Sampling
+
+It is easy if we only want to show an image as a background.
+But if we need the background to serve as a light source,
+we need to treat the background as an emitter surface and sample the environment map with importance sampling.
+
+![Environment Map of Shanghai](images/shanghai_env_map.jpg)
+![Importance Sampling on Environment Map of Shanghai](images/shanghai_sample_light.jpg)
+
+
+### Participating Media Path Tracer
+
+Our path tracer support homogeneous participating media.
+
+![Homogeneous Participating Media in a Dielectric Sphere](images/hm_volume_cornell_box.jpg)
+
+We found it hard to to decide when to sample free flight (i.e. when the ray hit the material).
+
+For convinence, I put the initialized medium into the integrator.
+And each surface has a medium insde and a medium outside.
+When the light hit something specular, which means they have a chance to change medium.
+This is detected by $dot(wi, n)*dot(n, wo)$, when this equation is greater 0,
+it means the ray continues going on, we need to check if it change the medium.
+
+We do this by shifting: when it equals to inside medium,
+we change it to outside medium, and vice versa.
+
+![Fog-Homogeneous Participating Media](images/path_tracing_homo_vol.jpg)
+
+
+### Photon Mapping, Final Gather, Progressive Photon Mapping
+
+We first implemented surface photon mapping.
+Photon mapping is a challenge
+
+<div class="twentytwenty-container">
+    <img src="images/200photon_50estimate.jpg" alt="200 photons / 50 photons in radiance estimate">
+    <img src="images/500000photon_500estimate.jpg" alt="500,000 photons / 500 photons in radiance estimate">
+</div>
+
+We chose p=hoton mapping as our integrator because it can handle it pretty well when scenes have limited light sources.
+It can produce relatively good results with a small number of photons and it is much faster than other integrators.
+
+We use Russian Roulette to decide when to stop tracing a photon to keep each photon with roughly the same power.
+To verify this, we output the photon map as shown below.
+
+![Russian Roulette](images/Russian_Roulette.jpg)
+
+We then implemented final gathering to improve the quality of photon mapping.
+It turns out that final gather will turn the bias into noise.
+
+<div class="twentytwenty-container">
+    <img src="images/200photon_50estimate.jpg" alt="200 photons / 50 photons in radiance estimate">
+    <img src="images/200photon_200caustic_50estimate.jpg" alt="200 photons + 200 caustic photons / 50 photons in radiance estimate">
+</div>
+
+For validation, we place a dielectric sphere with ior = 1 in the scene. The shere should be transparent.
+We only output the dirct light and the caustic to see if they are approximately cancel out.
+
+<div class="twentytwenty-container">
+    <img src="images/diffuse_ball.jpg" alt="The position of the sphere">
+    <img src="images/transparent_ball.jpg" alt="2000 caustic photons / 50 photons in radiance estimate">
+</div>
+
+The shadow region have some slight blurring artifacts since we are doing a radiance density estimation.
+But the shadow is roughly disappear, proving that our implementation is correct.
+
+For progressive photon mapping, we use the formula to change the search radius.
+```
+for (int i : range(frame)){
+md2 = (i+alpha) / (i+1.f) * md2;
+}
+```
+
+
+### Volumetric Photon Mapping
+
+We do it by using ray marching.
+This is because some direction of the aurora is extremely thin.
+Althought this method is baised, we still think it be quite useful for handling this particular scene.
+we also seperately trace surface and volume photon, especially during the genearating period,
+it can control the number of photons of different kinds of photons.
+
+
+
+## Scene Design
+
+We decided to render a series of consecutive scenes.
+The camera starts from the ice castle, sees the aurora and starry sky, then the dragon, and then the panorama of the snow mountain;
+Then we will see that all this is a scene in a snowglobe.
+The camera now captures the outside of the snowglobe, which is an indoor tabletop scene.
+
+The camera will move from one scene to another, and each scene has different light sources and objects.
+Rendering two completely different scenes (outdoors and indoors) is already a big challenge.
+At the same time, we also need to consider how to transition naturally between these two scenes.
+
+In addition to pursuing correct and real physical effects,
+we fully consider how to achieve better artistic effects simply and efficiently.
+
+### The Dragon
+
+We use normal maps to add details to the dragon.
+
+We wanted to simulate the dragon's fire using a hetogeneous participating media.
+
+It's tough to master Houdini and convert an emitted heterogeneous participating media to nanoVDB in such a short time.
+Although we finally gave up this idea due to the time limitation, we still want to show the result of our efforts.
+Here a projected light is used to light up the heterogeneous media created in Houdini.
+
+![Blue Fire](images/fire.jpg)
+
+
+### The Aurora
+
+The geometry of aurora can be simplfied as a series of light beams.
+For each "footprint" of the aurora, we have a light beam shoot straight up from the foot print to the sky.
+
+Although it is a good way to use procedurals to generate the footprints,
+we decided to draw it ourselves to have more flexibility of control the shape and color of the aurora.
+
+![Aurora Footprint](images/Aurora_footprint1.png)
+
+![Aurora Footprint](images/Aurora_footprint2.png)
+
+![Aurora Footprint](images/Aurora_footprint3.png)
+
+![Aurora Footprint](images/Aurora_footprint4.png)
+
+Aurora artist trick:
+* Put the projection light under a certain range of volume.
+
+* This volume can only free-sample once, to hold the light line straight up.
+
+* It prevented the scattered light from outside, avoiding most illumination from the other sources of light.
+
+* When doing the surface gathering, the ray directly go throught the volume, to keep transmittance where there is no aurora.(i.e. Integrate the light into the environment)
+
+* The air wall material to control the volume.
+
+* User can spycified whether the light could be seen, could be seen in one side or both side.
+
+
+
+### The Ice Castle
+
+We want snow covering the castle, which cound't be done by simply add normal textures.
+We use Houdini to simulate snow with depth on the castle.
+Houdini can provide magnificent effects, but learning Houdini is a very time consuming process.
+It is unfortunate for us not having enough time to create a new material simulating the ice.
+
+![Ice Castle covered with Snow and Aurora](images/ice_castle.jpg)
+
+
+### The Snowglobe
+
+As a night scene with limited light sources, environment map is an important light source of our scene.
+There are two separate environments in our scene, one is inside the snowglobe and the other is outside.
+As a result, we use two different environment maps.
+
+If the environment light appears as an infinite light source,
+the environment map will fill the background with the same size no matter how far the camera is zoomed out.
+
+![Infinity Env Light](images/inf_env_map_remote.jpg)
+
+To build a small environment light inside the snowglobe, we obviously can't use an infinity light.
+To solve this, we created a new surface call `BackgroundSurface` (separating from the origin environment class `InfinityBackgroundSurface`),
+which is a spherical ambient light with a constrained radius.
+However, this spherical shape will completely isolate the environment inside the snowglobe,
+making it impossible to see the scene inside from the outside.
+We don't want this, so we made some manipulations to its intersect judgment,
+so that the outside camera can see through that small background surface and watch inside.
+
+The effect of this surface is shown below:
+
+<div class="twentytwenty-container">
+    <img src="images/env_map.jpg" alt="Close up">
+    <img src="images/env_map_remote.jpg" alt="Remote">
+</div>
+
+![Snowglobe](images/snowglobe.jpg)
+
+![Snowglobe](images/snowglobe2.jpg)
+
+![Snowglobe](images/snowglobe3.jpg)
+
+
+### Scene Series
+
+Although it is difficult to animate in such a short time,
+we can animate the picture in a simple way.
+After we model the whole scene, we only change the camera parameters in the JSON file every frame and then re-render.
+Here we add a new executable file into Darts to export the animations.
+
+Since we had to render hundreds of frames in a short time,
+we parallelized the rendering process.
+In this process, some rendering quality may be sacrificed in exchange for an increase in rendering speed.
+For example, reduce the number of samples, reduce the number of photon searches and increase the search step size, etc.
+
+We use nanothread for parallel rendering.
+For normally integrators, we use each thread to generate one image,
+similarly as do on the instances
+(i.e. save computertation resources for other classmates).
+For photon mapping, we ues parallel do the prograssive path tracing.
+So all threads are rendering the same pictures with different radius.
+
+
+
+
+
+# Final Results
+
+![Our (close to) final scene](videos/final1.gif)
+
+
+# References
+
+Our models are from the following sources:
+
+* [sketchfab](https://sketchfab.com/)
+
+* [designconnected](https://www.designconnected.com/)
+
+* [designconnected](https://www.designconnected.com/)
+
+* [free3d](https://free3d.com/)
+
+* [cgtrader](https://www.cgtrader.com/)
+
+* [polyhaven](https://polyhaven.com/)
+
+* [clara](https://clara.io/)
+
+<!-- Slider -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="../resources/jquery.event.move.js"></script>
+<script src="../resources/jquery.twentytwenty.js"></script>
+<link href="../resources/twentytwenty.css" rel="stylesheet" type="text/css" />
+<script>var markdeepOptions = { onLoad: function () { $(".twentytwenty-container").twentytwenty({ default_offset_pct: 0.5, move_slider_on_hover: true }); } };</script>
+<!-- Markdeep: -->
+<script src="../resources/markdeep.min.js?" charset="utf-8"></script>
