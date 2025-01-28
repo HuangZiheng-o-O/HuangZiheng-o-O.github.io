@@ -1,0 +1,39 @@
+
+body {
+
+}
+
+
+.gif-container {
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    cursor: pointer;
+    margin: 20px auto;
+}
+.gif-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+.load-gif-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+.load-gif-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}

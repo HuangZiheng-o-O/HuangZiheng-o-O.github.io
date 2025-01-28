@@ -1,6 +1,12 @@
+
+<html lang="en">
+
 <meta charset="utf-8" emacsmode="-*- markdown -*-">
 <style class="fallback">body {visibility: hidden}</style>
 <link href="../resources/common.css" rel="stylesheet" type="text/css" />
+
+
+
 
 # Quinton's Ray Tracer with Metal
 ## Introduction
@@ -13,31 +19,62 @@ The code is written in Objective-C++ and Metal Shading Language. Hopefully, I wi
 ## App Viewer
 The app viewer is written in Swift. It is a simple app that can load a scene and render it. You can simply choose different scenes and path tracing algorithms.
 
-
-
 <!-- Single-column Layout for Images -->
 <div style="margin-top: 20px; text-align: center;">
   <p><strong>App Viewer</strong></p>
   <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-    <img src="./Results/App View/01.png" style="width: 80%; max-width: 600px; object-fit: contain;" />
-    <img src="./Results/App View/06.png" style="width: 80%; max-width: 600px; object-fit: contain;" />
-    <img src="./Results/App View/02.png" style="width: 80%; max-width: 600px; object-fit: contain;" />
-    <img src="./Results/App View/03.png" style="width: 80%; max-width: 600px; object-fit: contain;" />
-    <img src="./Results/App View/04.png" style="width: 80%; max-width: 600px; object-fit: contain;" />
-    <img src="./Results/App View/07.png" style="width: 80%; max-width: 600px; object-fit: contain;" />
+    <img src="./Results/App View/01.png" alt="App View 01" />
+    <img src="./Results/App View/06.png" alt="App View 06" />
+    <img src="./Results/App View/02.png" alt="App View 02" />
+    <img src="./Results/App View/03.png" alt="App View 03" />
+    <img src="./Results/App View/04.png" alt="App View 04" />
+    <img src="./Results/App View/07.png" alt="App View 07" />
   </div>
 </div>
 
-<!-- Video Section with Single-column Layout -->
+<!-- Video Section with Lazy-loaded GIFs -->
 <div style="margin-top: 40px; text-align: center;">
   <p>Here's a little video to help you learn how to operate the app.</p>
   <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-    <img src="./Results/App View/08.gif" style="width: 80%; max-width: 600px; object-fit: contain;" />
-    <img src="./Results/App View/09.gif" style="width: 80%; max-width: 600px; object-fit: contain;" />
-    <img src="./Results/App View/10.gif" style="width: 80%; max-width: 600px; object-fit: contain;" />
+
+    <!-- GIF 08 -->
+    <div class="gif-container">
+      <img
+              src="./Results/App View/placeholder.png"
+              data-gif="./Results/App View/08.gif"
+              alt="App Operation Video 1"
+      />
+      <button class="load-gif-button" aria-label="Play GIF">
+        ▶️
+      </button>
+    </div>
+
+    <!-- GIF 09 -->
+    <div class="gif-container">
+      <img
+              src="./Results/App View/placeholder.png"
+              data-gif="./Results/App View/09.gif"
+              alt="App Operation Video 2"
+      />
+      <button class="load-gif-button" aria-label="Play GIF">
+        ▶️
+      </button>
+    </div>
+
+    <!-- GIF 10 -->
+    <div class="gif-container">
+      <img
+              src="./Results/App View/placeholder.png"
+              data-gif="./Results/App View/10.gif"
+              alt="App Operation Video 3"
+      />
+      <button class="load-gif-button" aria-label="Play GIF">
+        ▶️
+      </button>
+    </div>
+
   </div>
 </div>
-
 
 ## Features
 ### Geometry
@@ -94,8 +131,53 @@ The app viewer is written in Swift. It is a simple app that can load a scene and
         default_offset_pct: 0.5,
         move_slider_on_hover: true
       });
+
+      // 添加加载GIF的JavaScript
+      // 获取所有加载GIF按钮
+      const buttons = document.querySelectorAll('.load-gif-button');
+
+      // 检查是否找到按钮
+      if (buttons.length === 0) {
+        console.error('未找到任何加载GIF的按钮。请检查HTML结构是否正确。');
+        return;
+      }
+
+      // 为每个按钮绑定点击事件
+      buttons.forEach(button => {
+        button.addEventListener('click', function () {
+          const container = this.parentElement;
+          const img = container.querySelector('img');
+          const gifSrc = img.getAttribute('data-gif');
+
+          if (gifSrc) {
+            console.log('正在加载GIF:', gifSrc);
+
+            // 创建新的Image对象以预加载GIF
+            const preloadedImg = new Image();
+            preloadedImg.src = gifSrc;
+
+            preloadedImg.onload = function () {
+              console.log('GIF加载完成:', gifSrc);
+              // 替换图片源
+              img.src = gifSrc;
+              // 移除按钮
+              button.remove();
+            };
+
+            preloadedImg.onerror = function () {
+              console.error('无法加载GIF: ' + gifSrc);
+              alert('GIF加载失败，请稍后再试。');
+            };
+          } else {
+            console.error('data-gif属性中未找到GIF源。');
+          }
+        });
+      });
     }
   };
 </script>
 <!-- Markdeep: -->
 <script src="../resources/markdeep.min.js?" charset="utf-8"></script>
+
+
+</html>
