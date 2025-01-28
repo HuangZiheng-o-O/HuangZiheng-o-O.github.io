@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Source Sans Pro', sans-serif;
-    background: #2c2f34;
+    background:#2f363f;
 
     color: rgb(220, 220, 220);
     /* font-weight: 700; */
@@ -33,7 +33,7 @@ table {
 /* em.asterisk {
     font-style: normal;
     font-weight: 500;
-    color: #333; 
+    color: #333;
 } */
 
 
@@ -130,4 +130,3 @@ table {
 
 
 /* End standard markdeep stuff */
-
