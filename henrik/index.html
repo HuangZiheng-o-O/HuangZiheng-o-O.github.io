@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ziheng Huang - AI Systems & Multimodal Research</title>
+  <meta name="description" content="Personal homepage for Ziheng Huang, Columbia MSCS student working on multimodal AI, efficient language model adaptation, video understanding, and AI code review systems.">
+  <meta name="theme-color" content="#10120f">
+  <link rel="preload" href="../PhotonFX/images/ice_castle.jpg" as="image">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-header>
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Ziheng Huang home">
+        <span class="brand-mark">ZH</span>
+        <span class="brand-text">Ziheng Huang</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-nav-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="nav-links" id="nav-links" data-nav-links>
+        <a href="#research" data-nav-link>Research</a>
+        <a href="#publications" data-nav-link>Publications</a>
+        <a href="#experience" data-nav-link>Experience</a>
+        <a href="#skills" data-nav-link>Skills</a>
+        <a class="nav-resume" href="#experience">Resume</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" data-section>
+      <div class="hero-media" aria-hidden="true">
+        <img src="../PhotonFX/images/ice_castle.jpg" alt="">
+      </div>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow">Columbia MSCS / Multimodal AI / Efficient LLMs</p>
+        <h1>Ziheng Huang</h1>
+        <p class="hero-lede">
+          I build adaptive AI systems for long-video understanding, parameter-efficient
+          language model tuning, and production code review workflows.
+        </p>
+        <div class="hero-actions" aria-label="Contact links">
+          <a class="button primary" href="mailto:zh2701@columbia.edu">zh2701@columbia.edu</a>
+          <a class="button secondary" href="https://github.com/HuangZiheng-o-O" target="_blank" rel="noopener">GitHub</a>
+          <a class="button secondary" href="https://www.linkedin.com/in/ziheng-huang-0211b1287/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <dl class="hero-metrics" aria-label="Selected profile metrics">
+          <div>
+            <dt>Columbia GPA</dt>
+            <dd>4.24 / 4.00</dd>
+          </div>
+          <div>
+            <dt>Major Rank</dt>
+            <dd>1st</dd>
+          </div>
+          <div>
+            <dt>VideoBrain</dt>
+            <dd>30-40% fewer frames</dd>
+          </div>
+          <div>
+            <dt>AICR Impact</dt>
+            <dd>+8.2 pp adoption</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="intro-band reveal" aria-label="Profile summary">
+      <div class="section-inner intro-grid">
+        <div>
+          <p class="section-kicker">Profile</p>
+          <h2>Research engineer focused on systems that reason under cost constraints.</h2>
+        </div>
+        <p>
+          My recent work spans adaptive frame sampling for VLMs, PEFT methods for
+          linear-attention language models, multimodal self-correction loops, and RAG-backed
+          AI code review infrastructure. I like problems where modeling decisions, data
+          pipelines, and runtime systems all have to fit together.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="research" data-section>
+      <div class="section-inner">
+        <div class="section-heading reveal">
+          <p class="section-kicker">Research</p>
+          <h2>Selected work</h2>
+          <p>
+            Projects centered on long-context perception, efficient adaptation, and
+            multimodal evaluation.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card large reveal">
+            <div class="feature-media">
+              <img src="../PhotonFX/images/env_map.jpg" alt="Rendered snow globe environment map from PhotonFX.">
+            </div>
+            <div class="feature-body">
+              <span class="pill">ICML 2026 under review</span>
+              <h3>VideoBrain: adaptive frame sampling for long video understanding</h3>
+              <p>
+                Proposed a dual-agent framework that lets VLMs choose between semantic
+                retrieval and dense temporal sampling, then trained multi-turn policies for
+                Qwen3-VL-8B with GRPO.
+              </p>
+              <ul>
+                <li>Built behavior-aware rewards to reduce reward hacking and unnecessary agent calls.</li>
+                <li>Reduced video decoding CPU memory use by 40% with Ray-based caching.</li>
+                <li>Improved long-video benchmark accuracy by 3.5% to 9.0% while using fewer frames.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-body">
+              <span class="pill teal">Linear attention</span>
+              <h3>Parameter-efficient fine-tuning of linear attention models</h3>
+              <p>
+                Developed a training framework for RetNet, Gated Linear Attention, and
+                DeltaNet to study how LoRA target modules affect downstream performance.
+              </p>
+              <ul>
+                <li>Combined parameter-selection strategies with LoRA in linear-attention architectures.</li>
+                <li>Explored sparse activated backbone weights with a dense V/O LoRA branch.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-media compact">
+              <img src="../PhotonFX/images/normal_map_pmfg.jpg" alt="Photon mapping final gathering render.">
+            </div>
+            <div class="feature-body">
+              <span class="pill coral">Multimodal generation</span>
+              <h3>Self-correcting human motion synthesis</h3>
+              <p>
+                Built a planner-generator-reviewer loop for motion generation, editing, and
+                video-based evaluation.
+              </p>
+              <ul>
+                <li>Introduced Motion Alignment Score for motion-text alignment.</li>
+                <li>Improved MAS from 28.61 to 29.40 after autonomous editing.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="feature-card reveal">
+            <div class="feature-body">
+              <span class="pill">Medical AI</span>
+              <h3>BrainDAS for multi-site brain network analysis</h3>
+              <p>
+                Designed dynamic kernel generation for structure-aware domain adaptation,
+                enabling site-specific graph embedding across source domains.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="visual-section reveal" aria-label="Rendering project">
+      <div class="visual-media" aria-hidden="true">
+        <img src="../PhotonFX/images/snowglobe.jpg" alt="">
+      </div>
+      <div class="visual-content">
+        <p class="section-kicker">Visual Systems</p>
+        <h2>PhotonFX inspired the atmosphere of this site.</h2>
+        <p>
+          The rendering project combines volumetric photon mapping, environment-map
+          importance sampling, participating media, and scene-level animation into a
+          cohesive visual study.
+        </p>
+        <a class="button secondary on-dark" href="../PhotonFX/result.html">View PhotonFX</a>
+      </div>
+    </section>
+
+    <section class="section" id="publications" data-section>
+      <div class="section-inner">
+        <div class="section-heading reveal">
+          <p class="section-kicker">Publications</p>
+          <h2>Recent papers</h2>
+        </div>
+        <div class="publication-list">
+          <article class="publication reveal">
+            <p class="pub-venue">ICML 2026, under review</p>
+            <h3>VideoBrain: Learning Adaptive Frame Sampling for Long Video Understanding</h3>
+            <p>J. Zou, Z. Huang, S. Zhang, L. Zhang, W. Shen</p>
+          </article>
+          <article class="publication reveal">
+            <p class="pub-venue">ICML 2026, under review</p>
+            <h3>Parameter-Efficient Fine-Tuning of Linear Attention Models</h3>
+            <p>Z. Huang, et al.</p>
+          </article>
+          <article class="publication reveal">
+            <p class="pub-venue">Medical Image Analysis, Vol. 96, Aug. 2024</p>
+            <h3>BrainDAS: Structure-aware Domain Adaptation Network for Multi-site Brain Network Analysis</h3>
+            <p>R. Song, P. Cao, G. Wen, P. Zhao, Z. Huang, et al.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section timeline-section" id="experience" data-section>
+      <div class="section-inner">
+        <div class="section-heading reveal">
+          <p class="section-kicker">Experience</p>
+          <h2>Engineering and education</h2>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item reveal">
+            <div class="timeline-date">May 2025 - Aug 2025</div>
+            <div class="timeline-card">
+              <p class="role">Software Engineer Intern, AI Code Review 2.0 Workflow</p>
+              <h3>Kuaishou Technology (Kwai), Beijing</h3>
+              <ul>
+                <li>Built a context-assembly pipeline for code merges using Tree-sitter AST chunking and LangChain fallback splitting.</li>
+                <li>Integrated Redis-vector RAG and LLM reasoning to merge and filter low-value review comments.</li>
+                <li>Designed a trie-based matcher for project, file type, path, and ownership review rules.</li>
+                <li>Raised AICR adoption to 37.3% and Commercial Department coverage to 56.6%.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-date">Aug 2025 - Dec 2026</div>
+            <div class="timeline-card">
+              <p class="role">Master of Science in Computer Science</p>
+              <h3>Columbia University, New York</h3>
+              <p>GPA: 4.24 / 4.00. Research focus on efficient language model adaptation and multimodal AI systems.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-date">Sep 2021 - Jul 2025</div>
+            <div class="timeline-card">
+              <p class="role">Bachelor of Engineering in Software Engineering</p>
+              <h3>Northeastern University, Shenyang</h3>
+              <p>International Class, English. GPA: 4.20 / 5.00, ranked 1st in the major. First-Class Scholarship in 2023, 2024, and 2025.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section skills-section" id="skills" data-section>
+      <div class="section-inner skills-layout">
+        <div class="section-heading reveal">
+          <p class="section-kicker">Skills</p>
+          <h2>Implementation stack</h2>
+          <p>Tools I use for research prototypes, backend systems, and full-stack experiments.</p>
+        </div>
+        <div class="skill-columns">
+          <div class="skill-group reveal">
+            <h3>Languages</h3>
+            <p>Java, Python, HTML/CSS, JavaScript, TypeScript, SQL, Lua, MATLAB, C, C++</p>
+          </div>
+          <div class="skill-group reveal">
+            <h3>ML and Systems</h3>
+            <p>PyTorch, Ray, Redis, Kafka, Linux, Git, RAG pipelines, Tree-sitter, vector search</p>
+          </div>
+          <div class="skill-group reveal">
+            <h3>Backend and Web</h3>
+            <p>Spring Boot, Spring Cloud, MyBatis, Flask, React, Vite, MySQL</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="section-inner footer-inner">
+      <p>New York, NY</p>
+      <div class="footer-links">
+        <a href="mailto:zh2701@columbia.edu">Email</a>
+        <a href="https://github.com/HuangZiheng-o-O" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/ziheng-huang-0211b1287/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="#experience">Resume</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
